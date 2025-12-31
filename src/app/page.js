@@ -1,16 +1,15 @@
-import HeroSectionPage from "@/components/herosection/HeroSectionPage";
-import Styles from "@/components/stylescomponent/Styles";
-import AllArivalesComponents from "@/components/arrivalscomponent/AllArivalesComponents";
-import Carousel from "@/components/customers/Carousel";
+import HreoSections from "../components/hreosection/HreoSections";
+import AboutPage from "./about/page";
+import WorkersPage from "./workers/pages";
 
+ import { supabase } from "../lib/supabase";
 
 export default function Home() {
   return (
     <>
-      <HeroSectionPage />
-      <AllArivalesComponents />
-      <Styles />
-      <Carousel />
+  <HreoSections />
+  <AboutPage />
+  <WorkersPage />  
     </>
   );
 }

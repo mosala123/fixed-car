@@ -1,147 +1,101 @@
-.header {
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-    background-color: white;
-}
-
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.headerlink {
-    display: flex;
-}
-
-.search-header {
-    padding: 10px 20px;
-    border: 1px solid #f0f0f0;
-    border-radius: 20px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background-color: #f0f0f0;
-}
-
-.search-header input {
+.icons-bar {
+    display: none;
+    background: none;
     border: none;
-    outline: none;
-    background: transparent;
-    width: 100%;
-}
-
-.cart-icon {
-    position: relative;
-}
-
-.cart-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: #ef4444;
     color: white;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 9999px;
-    min-width: 20px;
-    text-align: center;
-    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.3s ease;
+    z-index: 101;
 }
 
-/* start cart-header-shopping  */
-.cart-header-shopping {
-    position: absolute;
-    transform: translateY(-300%);
-    right: 0;
-    overflow-y: auto;
-    border-radius: 8px;
-    z-index: 1500;
-    border: 1px solid #ccc;
-    transition: 2s ease;
+.icons-bar:hover {
+    transform: scale(1.1);
 }
 
-.shopping-back {
-    transform: translateY(19px);
-
-
+/* Navigation Links Styling */
+.nav-link {
+    color: white;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    text-decoration: none;
 }
 
-/* ------------------------ */
+.nav-link:hover {
+    color: #FFD700;
+}
 
-@media screen and (max-width: 794px) {
-    .header-container {
-        justify-content: space-between;
+ 
+
+/* Mobile Navigation */
+@media (max-width: 1080px) {
+
+    .header-top-section,
+    .hr {
+        display: none;
     }
 
-    .headerlink {
-
-        flex-direction: column;
-        position: absolute;
-        top: 65px;
-        left: -200%;
-        width: 180px;
-        height: 209px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        z-index: 1100;
-        transition: 1s ease-in-out;
-        border-radius: 0 0 10px 0;
-        background-color: #f0f0f0;
+    .icons-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .headerlink ul {
+    .main-header {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .header-link {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 75%;
+        max-width: 280px;
+        height: 100vh;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        z-index: 100;
+        transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        padding: 80px 20px 20px;
+    }
+
+    .header-link.active {
+        left: 0;
+    }
+
+    .header-link ul {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
+        gap: 0;
         padding: 0;
         margin: 0;
+    }
+
+    .header-link li {
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         list-style: none;
     }
 
-    .headerlink ul li a {
-        color: #000;
-        font-weight: 540;
-        transition: color 0.7s ease-in-out;
+    .header-link li:last-child {
+        border-bottom: none;
+    }
+
+    .header-link li a {
+        display: block;
+        padding: 16px 20px;
         text-decoration: none;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
     }
 
-    .headerlink ul li a:hover {
-        font-weight: 550;
-    }
-
-    .headerlink.back {
-
-        left: 0;
-    }
-}
-
-.menu-toggle {
-    z-index: 1200;
-}
-
-@media screen and (min-width: 795px) {
-    .menu-toggle {
-        display: none;
+    .header-link li a:hover {
+        background-color: #3498db;
+        padding-left: 30px;
+        color: white;
     }
 }
-
-@media screen and (max-width: 780px) {
-
-
-    .headermo {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-    }
-}
-
-@media screen and (max-width: 650px) {
-    .search-header {
-        display: none;
-    }
-}
+ 
