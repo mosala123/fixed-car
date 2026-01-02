@@ -84,10 +84,10 @@ const HeroSection = () => {
 
                   {/* Buttons */}
                   <div className="flex flex-wrap gap-4">
-                    <Link href="/" className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded transition-all duration-300 uppercase text-sm tracking-wider">
+                    <Link href="/contactus" className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded transition-all duration-300 uppercase text-sm tracking-wider">
                       {slide.button1}
                     </Link>
-                    <Link href="/" className="border-2 border-white text-white hover:bg-white hover:text-gray-900 font-bold py-3 px-8 rounded transition-all duration-300 uppercase text-sm tracking-wider">
+                    <Link href="/about" className="border-2 border-white text-white hover:bg-white hover:text-gray-900 font-bold py-3 px-8 rounded transition-all duration-300 uppercase text-sm tracking-wider">
                       {slide.button2}
                     </Link>
                   </div>

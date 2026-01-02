@@ -1,12 +1,66 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FaUser, FaPhone, FaCar, FaCalendarAlt, FaClock, FaTools, FaCheckCircle } from 'react-icons/fa';
+import { supabase } from '@/lib/supabase';
 
 const BookingPage = () => {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    customer_name: "",
+    phone_number: "",
+    car_brand: "",
+    car_model: "",
+    car_year: "",
+    service_type: "",
+    appointment_date: "",
+    appointment_time: "",
+    notes: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage({ type: "", text: "" });
+
+    try {
+      const { data, error } = await supabase
+        .from('appointments')
+        .insert([
+          {
+            customer_name: formData.customer_name,
+            phone_number: formData.phone_number,
+            car_brand: formData.car_brand,
+            car_model: `${formData.car_model} ${formData.car_year}`,
+            appointment_date: `${formData.appointment_date} ${formData.appointment_time}`,
+            notes: `Service: ${formData.service_type}\n${formData.notes}`,
+            status: "pending"
+          }
+        ]);
+
+      if (error) throw error;
+
+      router.push('/success');
+    } catch (error) {
+      setMessage({ type: "error", text: "Booking failed. Please try again" });
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Header Section */}
       <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12 md:py-16">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-2xl mx-auto">
@@ -20,14 +74,11 @@ const BookingPage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
           
-          {/* Left Side - Booking Form */}
           <div className="lg:w-2/3">
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-              {/* Form Header */}
               <div className="bg-gradient-to-r from-orange-50 to-orange-100 p-6 border-b border-orange-200">
                 <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
                   <FaCar className="text-orange-500" />
@@ -38,11 +89,15 @@ const BookingPage = () => {
                 </p>
               </div>
 
-              {/* Form Content */}
               <div className="p-6 md:p-8">
-                <form className="space-y-8">
+                {message.text && (
+                  <div className={`mb-6 p-4 rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    {message.text}
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-8">
                   
-                  {/* Personal Information */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                       <FaUser className="text-orange-500" />
@@ -59,6 +114,10 @@ const BookingPage = () => {
                           </div>
                           <input
                             type="text"
+                            name="customer_name"
+                            value={formData.customer_name}
+                            onChange={handleChange}
+                            required
                             className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                             placeholder="Full Name"
                           />
@@ -75,6 +134,10 @@ const BookingPage = () => {
                           </div>
                           <input
                             type="tel"
+                            name="phone_number"
+                            value={formData.phone_number}
+                            onChange={handleChange}
+                            required
                             className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                             placeholder="+1 (555) 123-4567"
                           />
@@ -83,7 +146,6 @@ const BookingPage = () => {
                     </div>
                   </div>
 
-                  {/* Vehicle Information */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                       <FaCar className="text-orange-500" />
@@ -96,6 +158,10 @@ const BookingPage = () => {
                         </label>
                         <input
                           type="text"
+                          name="car_brand"
+                          value={formData.car_brand}
+                          onChange={handleChange}
+                          required
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                           placeholder="Toyota"
                         />
@@ -107,6 +173,10 @@ const BookingPage = () => {
                         </label>
                         <input
                           type="text"
+                          name="car_model"
+                          value={formData.car_model}
+                          onChange={handleChange}
+                          required
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                           placeholder="Camry"
                         />
@@ -118,6 +188,10 @@ const BookingPage = () => {
                         </label>
                         <input
                           type="number"
+                          name="car_year"
+                          value={formData.car_year}
+                          onChange={handleChange}
+                          required
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                           placeholder="2020"
                         />
@@ -125,7 +199,6 @@ const BookingPage = () => {
                     </div>
                   </div>
 
-                  {/* Service Details */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                       <FaTools className="text-orange-500" />
@@ -137,8 +210,14 @@ const BookingPage = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Service Type
                         </label>
-                        <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
-                          <option>Select a service...</option>
+                        <select 
+                          name="service_type"
+                          value={formData.service_type}
+                          onChange={handleChange}
+                          required
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                        >
+                          <option value="">Select a service...</option>
                           <option>Oil Change & Maintenance</option>
                           <option>Computer Diagnostics</option>
                           <option>General Mechanical Repair</option>
@@ -159,6 +238,10 @@ const BookingPage = () => {
                             </div>
                             <input
                               type="date"
+                              name="appointment_date"
+                              value={formData.appointment_date}
+                              onChange={handleChange}
+                              required
                               className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                             />
                           </div>
@@ -174,6 +257,10 @@ const BookingPage = () => {
                             </div>
                             <input
                               type="time"
+                              name="appointment_time"
+                              value={formData.appointment_time}
+                              onChange={handleChange}
+                              required
                               className="pl-10 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                             />
                           </div>
@@ -185,6 +272,9 @@ const BookingPage = () => {
                           Additional Notes
                         </label>
                         <textarea
+                          name="notes"
+                          value={formData.notes}
+                          onChange={handleChange}
                           rows={3}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                           placeholder="Describe any issues or specific requests..."
@@ -193,14 +283,14 @@ const BookingPage = () => {
                     </div>
                   </div>
 
-                  {/* Submit Button */}
                   <div>
                     <button
-                      type="button"
-                      className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-4 px-6 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-4 px-6 rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <FaCheckCircle className="h-5 w-5" />
-                      Book Appointment Now
+                      {loading ? 'Booking...' : 'Book Appointment Now n'}
                     </button>
                   </div>
                 </form>
@@ -208,11 +298,9 @@ const BookingPage = () => {
             </div>
           </div>
 
-          {/* Right Side - Info Panel */}
           <div className="lg:w-1/3">
             <div className="space-y-6">
               
-              {/* Service Hours Card */}
               <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">Service Hours</h3>
                 <div className="space-y-3">
@@ -231,7 +319,6 @@ const BookingPage = () => {
                 </div>
               </div>
 
-              {/* Why Choose Us Card */}
               <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white rounded-xl shadow-lg p-6">
                 <h3 className="text-xl font-bold mb-4">Why Choose Us</h3>
                 <ul className="space-y-3">
@@ -262,7 +349,6 @@ const BookingPage = () => {
                 </ul>
               </div>
 
-              {/* Contact Info Card */}
               <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">Need Help?</h3>
                 <div className="space-y-4">
@@ -285,7 +371,6 @@ const BookingPage = () => {
         </div>
       </div>
 
-      {/* Footer Note */}
       <div className="bg-gray-50 border-t border-gray-200 py-8">
         <div className="container mx-auto px-4 text-center">
           <p className="text-gray-600">
