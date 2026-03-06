@@ -82,7 +82,8 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      <HeaderPages />
+        <HeaderPages />
+        <div className="site-visual-layer" aria-hidden="true" />
         {children}
         <FooterPages />
       </body>
